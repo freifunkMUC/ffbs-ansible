@@ -6,8 +6,22 @@ import requests
 import string
 import subprocess
 import time
+import traceback
+import socket
+from tempfile import NamedTemporaryFile
 
 import ipaddress
+
+from . import wireguard
+
+def resolve(endpoint):
+    host, port = endpoint.split(':')
+    port = int(port)
+    addrinfo = socket.getaddrinfo(host, port, socket.AF_INET, socket.SOCK_DGRAM)
+    if not addrinfo:
+        return endpoint
+    host, port = addrinfo[0][4]
+    return '{}:{}'.format(host, port)
 
 def addresses_from_number(num):
     """calculates the client's addresses from its 14bit number"""
@@ -23,26 +37,22 @@ def addresses_from_number(num):
     range6 = as_v6(v6base | (num << 64))+'/64'
     return dict(address4=address4, range4=range4, address6=address6, range6=range6)
 
-HOST = 'concentrator1:8080'
+HOST = 'concentrator1'
 TEMPDIR = '/tmp/ff-ka7Ohp1i/'
-
-def get_wg_info():
-    output = subprocess.check_output(['wg','show','all','dump']).decode()
-    pubkey = output.split('\n',1)[0].split('\t')[2]
-    ifaces = set([l.split('\t',1)[0] for l in output.split('\n') if l])
-    return pubkey, ifaces
 
 def fetch_config(pubkey):
     nonce = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
     files = ['config', 'config.sig']
     text = dict()
     for fname in files:
-        r = requests.get('http://{}/{}?pubkey={}&nonce={}'.format(HOST, fname, pubkey, nonce))
+        r = requests.get('http://{}/{}'.format(HOST, fname),
+                params={'pubkey': pubkey, 'nonce': nonce})
         if r.status_code == 200:
             with open(TEMPDIR+fname, 'w') as f:
                 f.write(r.text)
                 text[fname] = r.text
         else:
+            print(r)
             return None
     rtn = subprocess.call(['signify-openbsd','-V','-p','/etc/ffbs/node-config-pub.key','-m',TEMPDIR+'config'])
     if rtn != 0:
@@ -53,20 +63,66 @@ def fetch_config(pubkey):
     del conf['nonce']
     return conf
 
-def apply_config(conf, ifaces):
-    pass
+def apply_config(conf, privkey):
+    concentrators_by_ifname = {}
+    for concentrator in conf['concentrators']:
+        concentrators_by_ifname["wg-c{}".format(concentrator['id'])] = concentrator.copy()
+    current = wireguard.get_dict()
+    old_ifs = set(current)
+    new_ifs = set(concentrators_by_ifname)
+    print(old_ifs, new_ifs)
+    for ifname in sorted(new_ifs - old_ifs):
+        subprocess.check_call("ip link add {} type wireguard".format(ifname).split())
+        subprocess.check_call("ip addr add {}/32 peer {} dev {}".format(
+            conf['address4'], concentrator['address4'], ifname,
+            ).split())
+        subprocess.check_call("ip addr add {}/128 peer {} dev {}".format(
+            conf['address6'], concentrator['address6'], ifname,
+            ).split())
+        subprocess.check_call("ip link set {} up".format(ifname).split())
+    for ifname in old_ifs - new_ifs:
+        subprocess.check_call("ip link del {}".format(ifname).split())
+    for ifname, concentrator in concentrators_by_ifname.items():
+        if_current = {
+                'private_key': current.get(ifname, {}).get('private_key'),
+                'listen_port': current.get(ifname, {}).get('listen_port'),
+        }
+        if_target = {
+                'private_key': privkey,
+                'listen_port': 2300+concentrator['id']
+        }
+        wireguard.update_if(ifname, if_current, if_target)
+        peer_current = current.get(ifname, {}).get('peers', {}).get(concentrator['pubkey'], {})
+        if peer_current:
+            peer_current = {
+                    'endpoint': peer_current.get('endpoint'),
+                    'persistent_keepalive': peer_current.get('persistent_keepalive'),
+                    'allowed_ips': peer_current.get('allowed_ips'),
+            }
+        peer_target = concentrators_by_ifname[ifname]
+        peer_target = {
+                'endpoint': resolve(peer_target['endpoint']),
+                'persistent_keepalive': 15,
+                'allowed_ips': ['0.0.0.0/0', '::/0'],
+        }
+        wireguard.update_peer(ifname, concentrator['pubkey'], peer_current, peer_target)
 
-if __name__ == '__main__':
-    print(addresses_from_number(0))
+def main():
+    keys = json.load(open('/etc/ffbs-wg.json'))
+    print(keys)
     if not os.path.exists(TEMPDIR):
         os.makedirs(TEMPDIR)
-    pubkey, ifaces = get_wg_info()
-    # ifaces is obsolete, since we need to create the wg intefaces depending on the config
     while True:
-        conf = fetch_config(pubkey)
+        conf = fetch_config(keys['pubkey'])
+        print(conf)
         if conf:
-            apply_config(conf, ifaces)
+            try:
+                apply_config(conf, keys['privkey'])
+            except:
+                traceback.print_exc()
             time.sleep(conf['retry'])
         else:
-            time.sleep(10)
+            time.sleep(600)
 
+if __name__ == '__main__':
+    main()

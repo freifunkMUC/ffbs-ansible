@@ -1,0 +1,10 @@
+[Unit]
+Description=Configure wireguard interface for all concentrators
+
+[Service]
+Type=simple
+ExecStart=/srv/venv/bin/ffbs-node-config
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

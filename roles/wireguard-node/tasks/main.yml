@@ -1,17 +1,3 @@
-- name: Create wireguard configuration
-  template:
-    src: 'wireguard.j2'
-    dest: '/etc/wireguard/{{ hostvars[item].wg_peer_ifname }}.conf'
-  with_items: '{{ groups.Concentrators }}'
-
-- name: Create wireguard interfaces
-  template:
-    src: 'interface.j2'
-    dest: '/etc/network/interfaces.d/{{ hostvars[item].wg_peer_ifname }}'
-  with_items: '{{ groups.Concentrators }}'
-  notify:
-  - Activate concentrator interfaces
-
 - name: Install node systemd service
   copy:
     src:  "{{ item.src }}"
@@ -19,10 +5,18 @@
     mode: "{{ item.mode }}"
   with_items:
     - { src: 'node-route.service', dest: '/etc/systemd/system/', mode: 644 }
+    - { src: 'node-config.service', dest: '/etc/systemd/system/', mode: 644 }
 
 - name: Enable and start node-route.service
   systemd:
     daemon_reload: yes
     name: node-route.service
+    state: started
+    enabled: yes
+
+- name: Enable and start node-config.service
+  systemd:
+    daemon_reload: yes
+    name: node-config.service
     state: started
     enabled: yes
