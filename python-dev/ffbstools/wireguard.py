@@ -53,7 +53,8 @@ def update_peer(ifname, public_key, current, target):
     elif target != current:
         print(target)
         print(current)
-        args += ["endpoint", target['endpoint']]
+        if 'endpoint' in target:
+            args += ["endpoint", target['endpoint']]
         args += ["persistent-keepalive", str(target['persistent_keepalive'])]
         args += ["allowed-ips", ','.join(target['allowed_ips'])]
     if args:

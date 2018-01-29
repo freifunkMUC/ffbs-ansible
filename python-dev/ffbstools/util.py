@@ -23,5 +23,5 @@ def pubkey_to_key(pubkey):
 def key_to_pubkey(key):
     raw = codecs.decode(key, 'hex')
     assert len(raw) == 32
-    return codecs.encode(raw, 'base64')
+    return codecs.encode(raw, 'base64').rstrip()
 
