@@ -50,6 +50,15 @@
       export ETCDCTL_CERT=/etc/ssl/etcd/etcd-client.cert.pem
       export ETCDCTL_KEY=/etc/ssl/etcd/etcd-client.key.pem
       export ETCDCTL_ENDPOINTS={{etcd_endpoints}}
+- name: Make etcd v3 API the default (environment file)
+  copy:
+    dest: "/etc/profile.d/etcd.env"
+    content: |
+      ETCDCTL_API=3
+      ETCDCTL_CACERT=/etc/ssl/etcd/etcd-ca.pem
+      ETCDCTL_CERT=/etc/ssl/etcd/etcd-client.cert.pem
+      ETCDCTL_KEY=/etc/ssl/etcd/etcd-client.key.pem
+      ETCDCTL_ENDPOINTS={{etcd_endpoints}}
 - name: Create etcd client configuration settings
   copy:
     dest: "/etc/etcd-client.json"
