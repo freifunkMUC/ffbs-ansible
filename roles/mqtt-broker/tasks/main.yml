@@ -1,0 +1,36 @@
+- name: install emqttd 
+  apt:
+    deb: http://emqtt.io/downloads/latest/debian9-deb
+- name: configure emqttd
+  template:
+    src: emq.j2
+    dest: /etc/emqttd/emq.conf
+    owner: emqtt
+    group: emqtt
+    mode: 0644
+- name: stop emqtt service 
+  service:
+    name: emqttd 
+    state: stopped 
+- name: disable emqtt service 
+  service:
+    name: emqttd 
+    enabled: no 
+#- name: remove emqttd from init
+#  file:
+#    path: /etc/init.d/emqttd
+#    state: absent
+- name: copy emqtt service file
+  copy:
+    src: emqttd.service
+    dest: /etc/systemd/system/emqttd.service
+- name: reload systemd service files 
+  systemd:
+    name: emqttd 
+    daemon_reload: yes
+- name: configure emqtt service (systemd) 
+  systemd:
+    name: emqttd 
+    enabled: yes
+  notify:
+    - Restart emqttd

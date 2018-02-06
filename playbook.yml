@@ -34,6 +34,7 @@
   roles:
     - nginx
     - wireguard-concentrator
+    - mqtt-broker
 - hosts:
   - client
   - concentrator1

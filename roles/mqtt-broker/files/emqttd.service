@@ -1,0 +1,14 @@
+[Unit]
+Description=emqtt daemon
+After=network.target
+
+[Service]
+Type=forking
+Environment=HOME=/root
+EnvironmentFile=/etc/profile.d/etcd.env
+ExecStart=/bin/sh /usr/sbin/emqttd start
+ExecStop=/bin/sh /usr/sbin/emqttd stop
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

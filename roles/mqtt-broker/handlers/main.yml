@@ -1,0 +1,4 @@
+---
+- name: Restart emqttd 
+  become: true
+  systemd: name=emqttd state=restarted 
