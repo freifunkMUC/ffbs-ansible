@@ -590,7 +590,8 @@ mqtt.plugins.loaded_file = /var/lib/emqttd/loaded_plugins
 ## Value: IP:Port | Port
 ##
 ## Examples: 1883, 127.0.0.1:1883, ::1:1883
-listener.tcp.external = 0.0.0.0:1883
+listener.tcp.external = 0.0.0.0:1883,:::1883
+listener.tcp.external6 = :::1883
 
 ## The acceptor pool for external MQTT/TCP listener.
 ##
