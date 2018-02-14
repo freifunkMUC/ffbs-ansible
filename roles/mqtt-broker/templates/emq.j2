@@ -20,7 +20,7 @@ cluster.name = emqcl
 ## - k8s:    Kubernates
 ##
 ## Default: manual
-cluster.discovery = etcd 
+cluster.discovery = manual 
 
 ## Enable cluster autoheal from network partition.
 ##
@@ -97,20 +97,20 @@ cluster.autoclean = 5m
 ## Etcd server list, seperated by ','.
 ##
 ## Value: String
-cluster.etcd.server = http://127.0.0.1:2378
+#cluster.etcd.server = http://127.0.0.1:2378
 
 ## The prefix helps build nodes path in etcd. Each node in the cluster
 ## will create a path in etcd: v2/keys/<prefix>/<cluster.name>/<node.name>
 ##
 ## Value: String
-cluster.etcd.prefix = emqcl
+#cluster.etcd.prefix = emqcl
 
 ## The TTL for node's path in etcd.
 ##
 ## Value: Duration
 ##
 ## Default: 1m, 1 minute
-cluster.etcd.node_ttl = 1m
+#cluster.etcd.node_ttl = 1m
 
 ##--------------------------------------------------------------------
 ## Cluster using Kubernates

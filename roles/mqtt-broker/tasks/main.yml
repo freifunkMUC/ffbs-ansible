@@ -1,6 +1,17 @@
 - name: install emqttd 
   apt:
     deb: http://emqtt.io/downloads/latest/debian9-deb
+- name: install python3-etcd 
+  apt:
+    name: python3-etcd
+    state: present
+- name: copy emqttd cluster manager
+  copy:
+    src: emqtt_cluster_manager.py 
+    dest: /usr/bin/emqtt_cluster_manager
+    mode: 0777
+  notify:
+    - Restart emqttd_cluster_manager
 - name: configure emqttd
   template:
     src: emq.j2
@@ -24,6 +35,12 @@
   copy:
     src: emqttd.service
     dest: /etc/systemd/system/emqttd.service
+- name: copy emqttd cluster manager service file
+  copy:
+    src: emqttd_cluster_manager.service
+    dest: /etc/systemd/system/emqttd_cluster_manager.service
+  notify:
+    - Restart emqttd_cluster_manager
 - name: reload systemd service files 
   systemd:
     name: emqttd 

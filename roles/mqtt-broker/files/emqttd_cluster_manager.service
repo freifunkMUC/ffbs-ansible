@@ -1,0 +1,12 @@
+[Unit]
+Description=emqttd cluster manager 
+After=network.target
+
+[Service]
+Type=simple
+Environment=HOME=/root
+Restart=always
+ExecStart=/usr/bin/emqtt_cluster_manager
+
+[Install]
+WantedBy=multi-user.target

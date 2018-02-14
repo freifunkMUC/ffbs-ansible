@@ -2,3 +2,6 @@
 - name: Restart emqttd 
   become: true
   systemd: name=emqttd state=restarted 
+- name: Restart emqttd_cluster_manager
+  become: true
+  systemd: name=emqttd_cluster_manager state=restarted 
