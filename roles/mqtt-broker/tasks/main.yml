@@ -45,6 +45,16 @@
   systemd:
     name: emqttd 
     daemon_reload: yes
+- name: reload systemd service files 
+  systemd:
+    name: emqttd_cluster_manager 
+    daemon_reload: yes
+- name: configure emqttd cluster manager service (systemd) 
+  systemd:
+    name: emqttd_cluster_manager
+    enabled: yes
+  notify:
+    - Restart emqttd
 - name: configure emqtt service (systemd) 
   systemd:
     name: emqttd 
