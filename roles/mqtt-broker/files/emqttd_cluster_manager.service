@@ -1,6 +1,6 @@
 [Unit]
 Description=emqttd cluster manager 
-After=network.target
+After=emqttd.service
 
 [Service]
 Type=simple
