@@ -1,33 +1,43 @@
-auto freifunk
-iface freifunk inet manual
-	up ip link add freifunk type vrf table freifunk
-	up ip -4 route add table freifunk unreachable default metric 8192
-	up ip -6 route add table freifunk unreachable default metric 8192
-	up ip -4 route add table freifunk unreachable 10.0.0.0/8 metric 8192
-	up ip -4 route add table freifunk unreachable 172.16.0.0/12 metric 8192
-	up ip -6 route add table freifunk unreachable 2001:bf7:380::/44  metric 8192
-	up ip link set dev freifunk up
+[Match]
+Name=freifunk
+
+[Network]
+DHCP=no
+IPv6AcceptRA=no
 {% if 'wg_backbone_v4' in vars %}
-	up ip -4 addr add {{ wg_backbone_v4 }} dev freifunk
+Address={{ wg_backbone_v4 }}/32
 {% else %}
-	# not connected to v4 backbone
+# not connected to v4 backbone
 {% endif %}
 {% if 'wg_backbone_v6' in vars %}
-	up ip -6 addr add {{ wg_backbone_v6 }} dev freifunk
+Address={{ wg_backbone_v6 }}/128
 {% else %}
-	# not connected to v6 backbone
+# not connected to v6 backbone
 {% endif %}
 {% if ffrl_local is defined %}
-	up ip -4 addr add {{ ffrl_local.v4 }}/32 dev freifunk
-	up ip -6 addr add {{ ffrl_local.v6 }}/128 dev freifunk
+Address={{ ffrl_local.v4 }}/32
+Address={{ ffrl_local.v6 }}/128
 {% else %}
-	# not connected to ffrl exit
+# not connected to ffrl exit
 {% endif %}
-	# allow transparent access to the backbone for etcd
-	up ip -4 route add 172.16.0.0/12 dev freifunk
-	# allow transparent access to the client network
-	up ip -4 route add 10.0.0.0/8 dev freifunk
-	up ip -6 route add 2001:bf7:380::/44 dev freifunk
-	down ip link del freifunk
-	down ip -4 route flush table freifunk
-	down ip -6 route flush table freifunk
+
+[Route]
+Destination=0.0.0.0/0
+Type=unreachable
+Metric=8192
+Table=10
+
+[Route]
+Destination=::/0
+Type=unreachable
+Metric=8192
+Table=10
+
+[Route]
+Destination=172.16.0.0/12
+
+[Route]
+Destination=10.0.0.0/8
+
+[Route]
+Destination=2001:bf7:380::/44

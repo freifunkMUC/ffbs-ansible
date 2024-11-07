@@ -20,15 +20,24 @@
     # we want dhcp and dns to be accessible from all VRFs
     - { name: 'net.ipv4.udp_l3mdev_accept', value: '1' }
 # Replaced by networkd
-# - name: Configure vrf
-#   template:
-#     src: "interface.j2"
-#     dest: "/etc/network/interfaces.d/00-vrf-freifunk"
-#     owner: "root"
-#     group: "root"
-#     mode: "0644"
-# - name: Activate freifunk vrf interface
-#   command: ifup freifunk
+- name: Add networkd vrf network
+  template:
+    src: "interface.j2"
+    dest: "/etc/systemd/network/10-vrf-freifunk.network"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify:
+    - Restart systemd-networkd
+- name: Add networkd vrf netdev
+  copy:
+    src: "10-vrf-freifunk.netdev"
+    dest: "/etc/systemd/network/10-vrf-freifunk.netdev"
+    owner: "root"
+    group: "root"
+    mode: 0600
+  notify:
+    - Restart systemd-networkd
 - name: Add VRF-specific resolv.conf
   copy:
     src: 'resolv.conf.freifunk'
