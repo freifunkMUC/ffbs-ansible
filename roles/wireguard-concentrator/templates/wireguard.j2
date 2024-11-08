@@ -1,3 +1,8 @@
-[Interface]
+{% set ifname = "wg-nodes" %}
+[NetDev]
+Name={{ ifname }}
+Kind=wireguard
+
+[WireGuard]
 ListenPort = 10000
 PrivateKey = {{ wg_private_key }}

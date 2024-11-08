@@ -1,6 +1,5 @@
 ---
-- name: Activate wg-nodes interface
-  command: ifup wg-nodes
-
-- name: Reconfigure wg-nodes
-  command: wg setconf wg-nodes /etc/wireguard/wg-nodes.conf
+- name: Restart systemd-networkd
+  ansible.builtin.systemd_service:
+    state: restarted
+    name: systemd-networkd

@@ -1,15 +1,16 @@
+---
 - name: Create wireguard configuration
   template:
     src: 'wireguard.j2'
-    dest: '/etc/wireguard/wg-nodes.conf'
-    mode: 0644
+    dest: '/etc/systemd/network/20-wg-nodes.netdev'
+    mode: 0600
   notify:
-    - Reconfigure wg-nodes
+    - Restart systemd-networkd
 
 - name: Create wireguard interfaces
   template:
     src: 'interface.j2'
-    dest: '/etc/network/interfaces.d/wg-nodes'
+    dest: '/etc/systemd/network/20-wg-nodes.network'
     mode: 0644
   notify:
-    - Activate wg-nodes interface
+    - Restart systemd-networkd

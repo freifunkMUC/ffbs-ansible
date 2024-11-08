@@ -1,10 +1,21 @@
 {% set ifname = "wg-nodes" %}
-auto {{ ifname }}
-iface {{ ifname }} inet static
-	mtu {{ wg_mtu }}
-	address {{ wg_gateway_v4 }}/32
-	pre-up ip link add {{ ifname }} type wireguard
-	pre-up ip link set {{ ifname }} vrf freifunk
-	pre-up ip addr add {{ wg_gateway_v6 }}/128 dev {{ ifname }}
-	pre-up wg setconf {{ ifname }} /etc/wireguard/{{ ifname }}.conf
-	post-down ip link del {{ ifname }}
+[Match]
+Name={{ ifname }}
+
+[Network]
+DHCP=no
+IPv6AcceptRA=no
+VRF=freifunk
+{% if 'wg_gateway_v4' in vars %}
+Address={{ wg_gateway_v4 }}/32
+{% else %}
+# no wg_gateway_v4
+{% endif %}
+{% if 'wg_gateway_v6' in vars %}
+Address={{ wg_gateway_v6 }}/128
+{% else %}
+# no wg_gateway_v6
+{% endif %}
+
+[Link]
+MTUBytes={{ wg_mtu }}
