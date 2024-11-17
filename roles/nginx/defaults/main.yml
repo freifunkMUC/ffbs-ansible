@@ -1,3 +1,0 @@
----
-nginx_tls: false
-nginx_tls_host: "{{ ansible_host }}"

@@ -1,5 +1,0 @@
----
-- name: Reload bind zones
-  become: true
-  #command: rndc reload
-  command: systemctl restart bind9

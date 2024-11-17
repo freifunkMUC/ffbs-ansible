@@ -1,3 +1,0 @@
-#!/bin/bash
-
-exec unshare --mount bash -c 'mount --bind /etc/resolv.conf.freifunk /etc/resolv.conf; exec ip vrf exec freifunk bash -l'

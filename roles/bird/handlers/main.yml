@@ -1,7 +1,0 @@
----
-- name: Reload bird
-  become: true
-  systemd: name=bird state=reloaded no_block=yes
-- name: Reload bird6
-  become: true
-  systemd: name=bird6 state=reloaded no_block=yes

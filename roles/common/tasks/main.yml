@@ -1,6 +1,1 @@
-- import_tasks: hosts.yml
-- import_tasks: interfaces.yml
-- import_tasks: prompt.yml
 - import_tasks: std-packages.yml
-- import_tasks: sysstat.yml
-- import_tasks: ssh.yml

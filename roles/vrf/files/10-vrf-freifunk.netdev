@@ -1,6 +1,0 @@
-[NetDev]
-Name=freifunk
-Kind=vrf
-
-[VRF]
-Table=10

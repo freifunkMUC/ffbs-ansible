@@ -1,4 +1,0 @@
----
-- name: Restart dnsmasq
-  become: true
-  systemd: name=dnsmasq state=restarted no_block=yes

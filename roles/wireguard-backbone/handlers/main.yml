@@ -1,8 +1,0 @@
----
-- name: Activate backbone interfaces
-  become: true
-  command: ifup {{ hostvars[item].wg_peer_ifname }}
-  with_items: '{{ groups.Backbone | difference([inventory_hostname])}}'
-- name: Update backbone wireguard configs
-  command: wg setconf {{ hostvars[item].wg_peer_ifname }} /etc/wireguard/{{ hostvars[item].wg_peer_ifname }}.conf
-  with_items: '{{ groups.Backbone | difference([inventory_hostname])}}'

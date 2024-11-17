@@ -1,9 +1,0 @@
-- name: Configure br0 interface
-  template:
-    src: "interface.j2"
-    dest: "/etc/network/interfaces.d/10-bridge"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify:
-  - Activate br0 interface

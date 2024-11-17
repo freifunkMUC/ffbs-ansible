@@ -1,5 +1,0 @@
----
-- name: Activate concentrator interfaces
-  become: true
-  command: ifup {{ hostvars[item].wg_peer_ifname }}
-  with_items: '{{ groups.Concentrators }}'

@@ -1,5 +1,0 @@
-- name: Show configured prompt
-  copy:
-    dest: "/etc/profile.d/ansible-prompt.sh"
-    content: |
-      PS1="{{ prompt | default('TEST') }} $PS1"

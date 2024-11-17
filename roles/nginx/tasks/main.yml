@@ -10,24 +10,6 @@
   file:
     path: "/etc/nginx/site-default.d"
     state: directory
-# - name: Add reload snipped to dehydrated hook
-#   blockinfile:
-#     path: "/etc/dehydrated/hook.deploy_cert.sh"
-#     create: true
-#     marker: "# {mark} ANSIBLE nginx role BLOCK"
-#     block: |
-#       systemctl reload --no-block nginx
-#     state: "{{ 'present' if nginx_tls else 'absent' }}"
-#   notify:
-#     - Run dehydrated
-# - name: Flush Handlers
-#   meta: flush_handlers
-
-# - name: Check if we have a cert
-#   stat:
-#     path: "/var/lib/dehydrated/certs/{{ nginx_tls_host }}/fullchain.pem"
-#   register: cert_check
-# - debug: var=cert_check
 
 - name: Create nginx default config
   template:
@@ -38,20 +20,6 @@
 
 - meta: flush_handlers
 
-# - name: Add hostname to dehydrated config
-#   lineinfile:
-#     dest: "/etc/dehydrated/domains.txt"
-#     create: true
-#     line: "{{ nginx_tls_host }}"
-#     state: "{{ 'present' if nginx_tls else 'absent' }}"
-#   notify:
-#     - Run dehydrated
-
-# - name: Check if we have a cert
-#   stat:
-#     path: "/var/lib/dehydrated/certs/{{ nginx_tls_host }}/fullchain.pem"
-#   register: cert_check
-# - debug: var=cert_check
 - name: Create nginx default config
   template:
     src: "default.j2"

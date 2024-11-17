@@ -1,7 +1,0 @@
-# {{ ansible_managed }}
-proxy_cache_path /var/cache/nginx/osm levels=1:2 keys_zone=osm-cache:10m max_size=1024m inactive=365d;
-upstream osm {
-	server a.tile.openstreetmap.org;
-	server b.tile.openstreetmap.org;
-	server c.tile.openstreetmap.org;
-}

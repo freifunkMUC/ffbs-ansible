@@ -1,7 +1,0 @@
-- name: Install sysstat
-  become: true
-  apt: name=sysstat state=latest
-- name: Enable sysstat
-  become: true
-  lineinfile: dest='/etc/default/sysstat' regexp='^ENABLED' line='ENABLED="true"' state=present
-

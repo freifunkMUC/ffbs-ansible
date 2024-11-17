@@ -1,4 +1,0 @@
----
-- name: Activate br0 interface
-  become: true
-  command: ifup br0

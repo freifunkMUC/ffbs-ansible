@@ -5,28 +5,5 @@ server {
         listen 80;
         listen [::]:80;
 
-        location ^~ /.well-known/acme-challenge {
-                alias /var/lib/dehydrated/acme-challenges;
-        }
-{% if nginx_tls %}
-        location / {
-                return 301 https://$host$request_uri;
-        }
-{% endif %}
 	include /etc/nginx/site-default.d/*.conf;
 }
-
-{% if nginx_tls and cert_check.stat.exists %}
-server {
-        server_name _;
-
-        listen 443 ssl;
-        listen [::]:443 ssl;
-
-        ssl on;
-        ssl_certificate /var/lib/dehydrated/certs/{{ nginx_tls_host }}/fullchain.pem;
-        ssl_certificate_key /var/lib/dehydrated/certs/{{ nginx_tls_host }}/privkey.pem;
-
-	include /etc/nginx/site-default.d/*.conf;
-}
-{% endif %}

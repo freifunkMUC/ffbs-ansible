@@ -1,9 +1,0 @@
-[Unit]
-Description=Run Website Extras every 2 Minutes
-
-[Timer]
-OnBootSec=60s
-OnUnitActiveSec=120s
-
-[Install]
-WantedBy=timers.target

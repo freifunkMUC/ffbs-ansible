@@ -1,7 +1,0 @@
----
-- name: Run dehydrated
-  become: true
-  command: dehydrated -c
-- name: Register dehydrated
-  become: true
-  command: dehydrated --register --accept-terms

@@ -1,9 +1,0 @@
-#{{ ansible_managed }}
-{% if 'wg_backbone_id' in vars %}
-if ($server_addr = 172.16.0.80) {
-	rewrite /(.*)$ http://172.16.1.{{ wg_backbone_id }}/$1 redirect;
-}
-if ($server_addr = 2001:bf7:382:0::80) {
-	rewrite /(.*)$ http://[{{ global_ipv6_range_without_prefix }}::{{ wg_backbone_id }}]/$1 redirect;
-}
-{% endif %}

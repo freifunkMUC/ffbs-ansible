@@ -1,3 +1,0 @@
----
-- name: Reload firewall
-  shell: netfilter-persistent reload

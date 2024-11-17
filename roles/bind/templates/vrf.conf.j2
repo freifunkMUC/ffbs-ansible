@@ -1,9 +1,0 @@
-[Service]
-ExecStart=
-ExecStartPre=/sbin/ip addr replace {{ dns_ip_v4 }}/32 dev freifunk preferred_lft 0
-ExecStartPre=/sbin/ip addr replace {{ dns_ip_v6 }}/128 dev freifunk preferred_lft 0
-ExecStart=/sbin/ip vrf exec freifunk /usr/sbin/named -f $OPTIONS
-ExecReload=
-ExecStop=
-ExecStopPost=-/sbin/ip addr del {{ dns_ip_v4 }}/32 dev freifunk
-ExecStopPost=-/sbin/ip addr del {{ dns_ip_v6 }}/128 dev freifunk

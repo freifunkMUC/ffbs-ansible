@@ -1,5 +1,0 @@
-- name: Configure systemd to regenerate missing SSH host keys
-  copy:
-    src:  'ssh-keygen.conf'
-    dest: '/etc/systemd/system/ssh.service.d/'
-    mode: 0644

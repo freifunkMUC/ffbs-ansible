@@ -1,4 +1,0 @@
----
-- name: Restart bind9
-  become: true
-  systemd: name=bind9 state=restarted no_block=yes

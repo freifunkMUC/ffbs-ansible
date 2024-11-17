@@ -1,4 +1,0 @@
-#!/bin/sh
-
-ansible -i .vagrant/provisioners/ansible/inventory/ -m debug -a "var=hostvars[inventory_hostname]" $*
-ansible -i .vagrant/provisioners/ansible/inventory/ -m debug -a "var=groupvars" $*
