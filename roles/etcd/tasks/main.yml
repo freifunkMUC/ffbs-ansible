@@ -70,10 +70,20 @@
 - name: Create etcd cluster data init script
   template:
     src: "etcd-init.sh"
-    dest: "/root/etcd-init.sh"
+    dest: "/usr/local/bin/etcd-init.sh"
     mode: "0700"
-- name: Initialize etcd cluster data
-  command: "/root/etcd-init.sh"
+- name: Create etcd cluster data init service
+  copy:
+    src: "etcd-init.service"
+    dest: "/etc/systemd/system/etcd-init.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+- name: Enable etcd-init service
+  systemd:
+    daemon_reload: yes
+    name: etcd-init.service
+    enabled: yes
 - name: Create etcd snapshot service
   template:
     src: "etcd-snapshot.service.j2"

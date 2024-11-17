@@ -1,0 +1,11 @@
+[Unit]
+Description=Initialize etcd data
+After=etcd.service
+Wants=etcd.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/etcd-init.sh
+
+[Install]
+WantedBy=multi-user.target
