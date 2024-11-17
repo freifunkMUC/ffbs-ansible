@@ -110,21 +110,15 @@ make_client_cert()
   touch flags/$1
 }
 
-make_server_cert parker-gw01 10.0.0.1
-make_server_cert parker-gw02 10.0.0.2
-make_server_cert parker-gw03 10.0.0.3
-make_server_cert parker-gw04 10.0.0.4
-# make_server_cert concentrator2 172.16.1.2
-# make_server_cert concentrator3 172.16.1.3
+make_server_cert parker-gw01 172.16.0.1
+make_server_cert parker-gw02 172.16.0.2
+make_server_cert parker-gw03 172.16.0.3
+make_server_cert parker-gw04 172.16.0.4
 
 make_client_cert parker-gw01
 make_client_cert parker-gw02
 make_client_cert parker-gw03
 make_client_cert parker-gw04
-# make_client_cert concentrator2
-# make_client_cert concentrator3
-# make_client_cert exit1
-# make_client_cert web
 
 mkdir -p $TARGET
 cp $BASE/ca.cert.pem $TARGET/etcd-ca.pem
