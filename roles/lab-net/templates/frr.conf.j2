@@ -1,8 +1,5 @@
-interface lo
-  ip address {{ router_id }}/32
-!
 router bgp {{ asn }}
-  bgp router-id {{ router_id }}
+  bgp router-id {{ public_ipv4 }}
   bgp bestpath as-path multipath-relax
   no bgp ebgp-requires-policy
   no bgp default ipv4-unicast
@@ -13,10 +10,9 @@ router bgp {{ asn }}
 
   address-family ipv4 unicast
     ! Announce specific route for our public IPv4
-    network {{ router_id }}/32
-
-    ! Annouce specific route for out NAT64 IPv4
-    network {{ nat64_ip }}/32
+    network {{ public_ipv4 }}/32
+    ! Annouce specific route for our NAT64 IPv4
+    network {{ nat64_ipv4 }}/32
 
     neighbor PEER activate
   exit-address-family
@@ -24,6 +20,8 @@ router bgp {{ asn }}
   address-family ipv6 unicast
     ! Announce specific route for our public IPv6
     network {{ wg_gateway_v6 }}/128
+    ! Annouce specific route for our NAT64 IPv6
+    network {{ nat64_ipv6 }}/128
     ! Announce entire public IPv6 range used by APs
     network {{ global_ipv6_range_without_prefix }}::/{{ global_ipv6_range_prefix }}
 

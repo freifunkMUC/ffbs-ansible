@@ -1,9 +1,10 @@
-router_id: '192.0.2.103'
-# TODO: Some sort of firewalling to prevent clients from accessing etcd?
+public_ipv4: '192.0.2.3'
 etcd_peer_ip: '172.16.0.3'
 vpn_ip: '172.16.0.3/24'
-nat64_ip: '192.0.2.113'
+nat64_ipv4: '192.0.2.13'
+nat64_ipv6: '{{ global_ipv6_range_without_prefix }}::1:3'
 asn: 65103
+
 wg_private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           30386436336136323832393466303164633864336533363030666636653131656135313439396232
@@ -13,9 +14,7 @@ wg_private_key: !vault |
           61366234306635363839646438666339616337373165356161353265633437386465663835636238
           3730323164396139366261393666626138653962363537626234
 wg_public_key: '0zLO9U0+bcOwcgp0M2oOstq4n/L4zcyemgNy8Bd2kE4='
+
 wg_backbone_id: '3'
-wg_hostname: '192.0.2.103'
-global_ipv6_range_without_prefix: '2001:db8:ff00'
-global_ipv6_range_prefix: '48'
 wg_gateway_v4: '10.0.0.3'
 wg_gateway_v6: '{{ global_ipv6_range_without_prefix }}::3'

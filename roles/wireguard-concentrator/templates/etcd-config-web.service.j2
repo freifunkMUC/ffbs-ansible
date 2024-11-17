@@ -7,7 +7,7 @@ ExecStart=/usr/local/bin/etcdconfigweb
 Restart=always
 RestartSec=10
 StartLimitInterval=0
-Environment="PARKER_V4_RANGE=10.0.0.0/16"
+Environment="PARKER_V4_RANGE={{ private_ipv4_range }}"
 Environment="PARKER_V6_RANGE={{ global_ipv6_range_without_prefix }}::/{{ global_ipv6_range_prefix }}"
 
 [Install]

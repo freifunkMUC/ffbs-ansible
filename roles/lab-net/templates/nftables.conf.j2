@@ -47,6 +47,6 @@ table inet filter {
 table ip nat {
     chain postrouting {
         type nat hook postrouting priority srcnat; policy accept;
-        iif wg-nodes oif uplink counter snat to {{ router_id }}
+        iif wg-nodes oif uplink counter snat to {{ public_ipv4 }}
     }
 }

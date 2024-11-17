@@ -1,1 +1,6 @@
 wg_mtu: '1375'
+
+private_ipv4_range: '10.0.0.0/16'
+
+global_ipv6_range_without_prefix: '2001:db8:ff00'
+global_ipv6_range_prefix: '48'

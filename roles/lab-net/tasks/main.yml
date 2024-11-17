@@ -53,7 +53,7 @@
     state: absent
     path: /etc/netplan/50-cloud-init.yaml
 
-- name: Add networkd config
+- name: Add networkd fixed config
   copy:
     src: "{{ item }}"
     dest: /etc/systemd/network/{{ item }}
@@ -61,13 +61,15 @@
   with_items:
     - 10-uplink.link
     - 11-vpn.link
-    - 20-uplink.network
 
 - name: Add networkd template config
   template:
-    src: 21-vpn.network.j2
-    dest: /etc/systemd/network/21-vpn.network
+    src: "{{ item }}.j2"
+    dest: /etc/systemd/network/{{ item }}
     mode: 0644
+  with_items:
+    - 20-uplink.network
+    - 21-vpn.network
 
 - name: Add nftables config
   template:
