@@ -11,7 +11,7 @@
   become: true
   roles:
     - no-vrf
-    - bird
+    - lab-net
     # - wireguard-backbone
 
 - hosts: etcd_cluster

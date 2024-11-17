@@ -1,0 +1,55 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+# Use unified v4/v6 filter table
+table inet filter {
+    chain input {
+        type filter hook input priority filter; policy drop;
+
+        # Allow trusted interfaces
+        iif { vpn, lo } counter accept
+
+        # Allow established connections
+        ct state established,related counter accept
+
+        # Allow Nginx access
+        tcp dport { 80, 443 } counter accept
+
+        # Allow BGP
+        iif uplink tcp dport 179 counter accept
+
+        # Allow incoming WireGuard tunnels
+        iif uplink udp dport 10000 counter accept
+
+        # Allow ICMP (could filter/ratelimit more aggressively)
+        ip protocol icmp counter accept
+        meta l4proto ipv6-icmp counter accept
+
+        # Count dropped packets
+        counter
+    }
+    chain forward {
+        type filter hook forward priority filter; policy drop;
+
+        # Allow traffic from nodes to the internet and back
+        iif wg-nodes oif uplink counter accept
+        iif uplink oif wg-nodes counter accept
+
+        # Allow hairpin traffic between nodes
+        iif wg-nodes oif wg-nodes counter accept
+
+        # Count dropped packets
+        counter
+    }
+    chain output {
+        type filter hook output priority filter; policy accept;
+    }
+}
+
+table ip nat {
+    chain postrouting {
+        type nat hook postrouting priority srcnat; policy accept;
+        iif wg-nodes oif uplink counter snat to {{ router_id }}
+    }
+}

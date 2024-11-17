@@ -1,0 +1,88 @@
+- name: Add FRR repository key
+  apt_key:
+    url: "https://deb.frrouting.org/frr/keys.asc"
+    state: present
+
+- name: Add FRR repository
+  apt_repository:
+    repo: "deb https://deb.frrouting.org/frr {{ ansible_distribution_release }} frr-stable"
+    state: present
+
+- name: Update apt cache after adding FRR repository
+  apt:
+    update_cache: yes
+
+- name: Install FRR package
+  apt:
+    name: frr
+    state: present
+  notify: Restart FRR service
+
+- name: Configurate FRR daemons
+  copy:
+    src: daemons
+    dest: /etc/frr/daemons
+    mode: 0644
+  notify: Restart FRR service
+
+- name: Configure FRR
+  template:
+    src: frr.conf.j2
+    dest: /etc/frr/frr.conf
+    mode: 0644
+  notify: Restart FRR service
+
+- meta: flush_handlers
+
+- name: Enable routing
+  sysctl:
+    name:  "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: yes
+    sysctl_file: "/etc/sysctl.d/10-routing.conf"
+  with_items:
+    - { name: 'net.ipv4.ip_forward', value: '1' }
+    - { name: 'net.ipv6.conf.all.forwarding', value: '1' }
+    - { name: 'net.ipv4.conf.all.accept_redirects', value: '0' }
+    - { name: 'net.ipv6.conf.all.accept_redirects', value: '0' }
+    - { name: 'net.ipv6.conf.all.autoconf', value: '0' }
+    - { name: 'net.ipv6.conf.all.accept_ra', value: '0' }
+
+- name: Remove default netplan
+  file:
+    state: absent
+    path: /etc/netplan/50-cloud-init.yaml
+
+- name: Add networkd config
+  copy:
+    src: "{{ item }}"
+    dest: /etc/systemd/network/{{ item }}
+    mode: 0644
+  with_items:
+    - 10-uplink.link
+    - 11-vpn.link
+    - 20-uplink.network
+
+- name: Add networkd template config
+  template:
+    src: 21-vpn.network.j2
+    dest: /etc/systemd/network/21-vpn.network
+    mode: 0644
+
+- name: Add nftables config
+  template:
+    src: nftables.conf.j2
+    dest: /etc/nftables.conf
+    mode: 0644
+
+- name: Add nftables unit
+  copy:
+    src: nftables.service
+    dest: /etc/systemd/system/nftables.service
+    mode: 0644
+
+- name: Enable nftables
+  systemd:
+    daemon_reload: yes
+    name: nftables.service
+    enabled: yes

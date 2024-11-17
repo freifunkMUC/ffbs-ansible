@@ -1,0 +1,20 @@
+[Unit]
+Description=Set up nftables firewall rules
+# We want to refer to those interfaces by id, so they need to exist already
+Wants=systemd-networkd.system
+Before=frr.service
+After=sys-subsystem-net-devices-uplink.device
+After=sys-subsystem-net-devices-wg\x2dnodes.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/nft -f /etc/nftables.conf
+ExecReload=/usr/sbin/nft -f /etc/nftables.conf
+ExecStop=/usr/sbin/nft flush ruleset
+
+[Install]
+WantedBy=multi-user.target
+# Configure the firewall before announcing our public IP
+RequiredBy=frr.service
+Before=frr.service

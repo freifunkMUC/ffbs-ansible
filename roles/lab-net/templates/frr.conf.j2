@@ -1,0 +1,29 @@
+interface lo
+  ip address {{ router_id }}/32
+!
+router bgp {{ asn }}
+  bgp router-id {{ router_id }}
+  bgp bestpath as-path multipath-relax
+  no bgp ebgp-requires-policy
+  no bgp default ipv4-unicast
+
+  neighbor PEER peer-group
+  neighbor PEER remote-as external
+  neighbor uplink interface v6only peer-group PEER
+
+  address-family ipv4 unicast
+    ! Announce specific route for our public IPv4
+    network {{ router_id }}/32
+
+    neighbor PEER activate
+  exit-address-family
+
+  address-family ipv6 unicast
+    ! Announce specific route for our public IPv6
+    network {{ wg_gateway_v6 }}/128
+    ! Announce entire public IPv6 range used by APs
+    network {{ global_ipv6_range_without_prefix }}::/{{ global_ipv6_range_prefix }}
+
+    neighbor PEER activate
+  exit-address-family
+!

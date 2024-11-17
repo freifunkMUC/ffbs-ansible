@@ -1,0 +1,10 @@
+[Match]
+Name=uplink
+
+[Network]
+IPv6AcceptRA=no
+
+# Different options for systemd <= 255 and >= 256
+IPForward=yes
+IPv4Forwarding=yes
+IPv6Forwarding=yes
