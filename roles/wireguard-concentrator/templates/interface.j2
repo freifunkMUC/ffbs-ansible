@@ -21,5 +21,9 @@ Address={{ wg_gateway_v6 }}/128
 # this route is required to route IPv6 traffic from a range that is not bound to any public interface
 Destination={{ global_ipv6_range_without_prefix }}::/{{ global_ipv6_range_prefix }}
 
+[Route]
+# this route is required to route IPv4 traffic from a range that is not bound to any public interface
+Destination=10.0.0.0/16
+
 [Link]
 MTUBytes={{ wg_mtu }}
