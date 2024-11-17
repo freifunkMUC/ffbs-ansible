@@ -29,6 +29,6 @@
   roles:
     - nginx
     - wireguard-concentrator
-    - bind
+    # - bind
     # - bind-reverse
     # - chrony
