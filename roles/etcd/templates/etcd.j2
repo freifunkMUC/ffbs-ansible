@@ -6,8 +6,8 @@ ETCD_INITIAL_CLUSTER="{{etcd_initial_cluster}}"
 ETCD_INITIAL_CLUSTER_STATE="new"
 ETCD_INITIAL_CLUSTER_TOKEN="ffbs-vagrant-etcd-cluster"
 
-ETCD_LISTEN_PEER_URLS="https://0.0.0.0:2380"
-ETCD_LISTEN_CLIENT_URLS="https://0.0.0.0:2379"
+ETCD_LISTEN_PEER_URLS="https://{{etcd_peer_ip}}:2380"
+ETCD_LISTEN_CLIENT_URLS="https://{{etcd_peer_ip}}:2379"
 
 ETCD_ADVERTISE_CLIENT_URLS="https://{{etcd_peer_ip}}:2379"
 
