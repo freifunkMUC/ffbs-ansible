@@ -30,16 +30,13 @@ table inet filter {
         counter
     }
     chain forward {
-        type filter hook forward priority filter; policy drop;
+        type filter hook forward priority filter; policy accept;
 
-        # Allow traffic from nodes to the internet and back
-        iif wg-nodes oif uplink counter accept
-        iif uplink oif wg-nodes counter accept
+        # Don't forward into the VPN
+        iif vpn counter drop
+        oif vpn counter drop
 
-        # Allow hairpin traffic between nodes
-        iif wg-nodes oif wg-nodes counter accept
-
-        # Count dropped packets
+        # Count forwarded packets
         counter
     }
     chain output {

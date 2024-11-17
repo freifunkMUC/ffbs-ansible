@@ -1,0 +1,24 @@
+- name: Install Jool package
+  apt:
+    name:
+      - jool-dkms
+      - jool-tools
+    state: present
+
+- name: Add Jool script
+  template:
+    src: setup-jool.sh.j2
+    dest: /usr/local/sbin/setup-jool.sh
+    mode: 0755
+
+- name: Add Jool unit
+  copy:
+    src: jool.service
+    dest: /etc/systemd/system/jool.service
+    mode: 0644
+
+- name: Enable Jool
+  systemd:
+    daemon_reload: yes
+    name: jool.service
+    enabled: yes

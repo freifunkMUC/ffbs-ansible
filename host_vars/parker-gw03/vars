@@ -2,6 +2,7 @@ router_id: '192.0.2.103'
 # TODO: Some sort of firewalling to prevent clients from accessing etcd?
 etcd_peer_ip: '172.16.0.3'
 vpn_ip: '172.16.0.3/24'
+nat64_ip: '192.0.2.113'
 asn: 65103
 wg_private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256

@@ -9,3 +9,4 @@
     - etcd-client
     - nginx
     - wireguard-concentrator
+    - jool

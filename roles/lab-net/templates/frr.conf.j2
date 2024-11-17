@@ -15,6 +15,9 @@ router bgp {{ asn }}
     ! Announce specific route for our public IPv4
     network {{ router_id }}/32
 
+    ! Annouce specific route for out NAT64 IPv4
+    network {{ nat64_ip }}/32
+
     neighbor PEER activate
   exit-address-family
 
