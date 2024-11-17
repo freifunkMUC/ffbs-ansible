@@ -1,2 +1,1 @@
-global_ipv6_range_without_prefix: '2001:db8:4242'
-global_ipv6_range_prefix: '48'
+wg_mtu: '1375'

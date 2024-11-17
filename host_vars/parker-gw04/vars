@@ -1,6 +1,8 @@
-router_id: '10.0.0.4'
+router_id: '192.0.2.104'
 # TODO: Some sort of firewalling to prevent clients from accessing etcd?
-etcd_peer_ip: '10.0.0.4'
+etcd_peer_ip: '172.16.0.4'
+vpn_ip: '172.16.0.4/24'
+asn: 65104
 wg_private_key: !vault |
           $ANSIBLE_VAULT;1.1;AES256
           38383831396132663662623535376539373432363734666236313266303733623637393461316333
@@ -11,8 +13,8 @@ wg_private_key: !vault |
           3536666165636430383837323631333735316337343164623161
 wg_public_key: 'zOginkbRsYWBVDsaEb87cfBlC+y1jWOP6mqy4xQ8ZHg='
 wg_backbone_id: '4'
-wg_hostname: '{{ ansible_host }}'
-global_ipv6_range_without_prefix: '2a09:7002:101:2d50'
-global_ipv6_range_prefix: '60'
+wg_hostname: '192.0.2.104'
+global_ipv6_range_without_prefix: '2001:db8:ff00'
+global_ipv6_range_prefix: '48'
 wg_gateway_v4: '10.0.0.4'
-wg_gateway_v6: '{{ global_ipv6_range_without_prefix }}::beec'
+wg_gateway_v6: '{{ global_ipv6_range_without_prefix }}::4'
