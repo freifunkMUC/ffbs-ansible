@@ -1,4 +1,4 @@
-/.cache
+.vault/.cache
 
 /.vagrant/*
 /.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
@@ -13,3 +13,5 @@
 
 __pycache__/
 *.swp
+
+.vault
