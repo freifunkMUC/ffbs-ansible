@@ -1,7 +1,7 @@
-public_ipv4: '192.0.2.2'
+public_ipv4: '198.51.100.2'
 etcd_peer_ip: '172.16.0.2'
 vpn_ip: '172.16.0.2/24'
-nat64_ipv4: '192.0.2.12'
+nat64_ipv4: '198.51.100.12'
 nat64_ipv6: '{{ global_ipv6_range_without_prefix }}::1:2'
 asn: 65102
 
